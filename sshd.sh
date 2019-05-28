@@ -1,5 +1,6 @@
 #!/bin/bash
 
+[ ! -e /etc/ssh/sshd_config ] && cp /etc/sshd_config.orig /etc/ssh/sshd_config
 [ ! -e /etc/ssh/ssh_host_rsa_key ] && dpkg-reconfigure openssh-server
 
 [ "$USERNAME" = "" ] && USERNAME=user

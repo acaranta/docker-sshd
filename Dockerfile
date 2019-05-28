@@ -6,5 +6,5 @@ RUN apt-get update \
   && /bin/rm -v /etc/ssh/ssh_host_* \
   && mkdir /var/run/sshd
 COPY sshd.sh /sshd.sh
-COPY sshd_config /etc/ssh/
+COPY sshd_config /etc/sshd_config.orig
 CMD /sshd.sh
