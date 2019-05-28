@@ -40,7 +40,7 @@ then
   mkdir -p "$USERDIR/.ssh"
   chmod 700 "$USERDIR/.ssh"
   chown "$USERID":"$GROUPID" "$USERDIR/.ssh"
-  echo "$PUBKEY" > "$USERDIR/.ssh/authorized_keys"
+  [ ! -e $USERDIR/.ssh/authorized_keys ] && echo "$PUBKEY" > "$USERDIR/.ssh/authorized_keys"
 fi
 
 # Sudo
