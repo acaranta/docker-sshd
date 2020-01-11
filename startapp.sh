@@ -55,9 +55,9 @@ case "$SUDOER" in
 esac
 
 service ssh start
+>/var/lib/dpkg/statoverride
 chmod a+rwx /tmp/run -Rfv
 if [ -f "/home/$USERNAME/prerun.sh" ]; then
     /bin/bash /home/$USERNAME/prerun.sh
 fi
->/var/lib/dpkg/statoverride
 exec su -c "cd /home/$USERNAME ; XDG_CONFIG_HOME=/home/acaranta/.config /usr/bin/terminator -u" acaranta
