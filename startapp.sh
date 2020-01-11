@@ -59,4 +59,5 @@ chmod a+rwx /tmp/run -Rfv
 if [ -f "/app/prerun.sh" ]; then
     /bin/bash /app/prerun.sh
 fi
+>/var/lib/dpkg/statoverride
 exec su -c "cd /home/$USERNAME ; XDG_CONFIG_HOME=/home/acaranta/.config /usr/bin/terminator -u" acaranta
