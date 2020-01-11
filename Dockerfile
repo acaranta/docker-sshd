@@ -1,10 +1,11 @@
-FROM ubuntu
+FROM jlesage/baseimage-gui:ubuntu-18.04
 
-RUN apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install sudo openssh-server busybox-syslogd -y \
-  && apt-get clean \
-  && /bin/rm -v /etc/ssh/ssh_host_* \
-  && mkdir /var/run/sshd
-COPY sshd.sh /sshd.sh
+
+RUN apt-get update && apt-get install -y terminator tmux git openssh-server busybox-syslogd && apt-get clean
+RUN /bin/rm -v /etc/ssh/ssh_host_* && mkdir /var/run/sshd
 COPY sshd_config /etc/ssh/
-CMD /sshd.sh
+RUN mkdir /app
+COPY terminator.png /app
+RUN APP_ICON_URL=file:///app/terminator.png && install_app_icon.sh "$APP_ICON_URL"
+ENV APP_NAME="Terminator"
+ADD startapp.sh /startapp.sh

@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/sh
 [ ! -e /etc/ssh/ssh_host_rsa_key ] && dpkg-reconfigure openssh-server
 
 [ "$USERNAME" = "" ] && USERNAME=user
@@ -56,4 +55,8 @@ case "$SUDOER" in
 esac
 
 service ssh start
-syslogd -n -O /dev/stdout
+chmod a+rwx /tmp/run -Rfv
+if [ -f "/app/prerun.sh" ]; then
+    /bin/bash /app/prerun.sh
+fi
+exec su -c "cd /home/$USERNAME ; XDG_CONFIG_HOME=/home/acaranta/.config /usr/bin/terminator -u" acaranta
