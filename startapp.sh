@@ -60,4 +60,4 @@ chmod a+rwx /tmp/run -Rfv
 if [ -f "/home/$USERNAME/prerun.sh" ]; then
     /bin/bash /home/$USERNAME/prerun.sh
 fi
-exec su -c "cd /home/$USERNAME ; XDG_CONFIG_HOME=/home/acaranta/.config /usr/bin/terminator -u" acaranta
+exec su -c "cd $USERDIR ; XDG_CONFIG_HOME=$USERDIR/.config /usr/bin/terminator -u" $USERNAME
