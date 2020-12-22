@@ -7,5 +7,10 @@ COPY sshd_config /etc/ssh/
 RUN mkdir /app
 COPY terminator.png /app
 RUN APP_ICON_URL=file:///app/terminator.png && install_app_icon.sh "$APP_ICON_URL"
+RUN mkdir /var/empty ; \
+    chown root:sys /var/empty ; \
+    chmod 755 /var/empty ; \
+    groupadd sshd ; \
+    useradd -g sshd -c 'sshd privsep' -d /var/empty -s /bin/false sshd 
 ENV APP_NAME="Terminator"
 ADD startapp.sh /startapp.sh
