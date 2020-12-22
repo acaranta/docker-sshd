@@ -55,6 +55,7 @@ case "$SUDOER" in
 esac
 
 service ssh start
+syslogd -n -O /dev/stdout &
 >/var/lib/dpkg/statoverride
 chmod a+rwx /tmp/run -Rfv
 if [ -f "/home/$USERNAME/prerun.sh" ]; then
