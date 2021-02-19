@@ -10,7 +10,9 @@ RUN APP_ICON_URL=file:///app/terminator.png && install_app_icon.sh "$APP_ICON_UR
 RUN mkdir /var/empty ; \
     chown root:sys /var/empty ; \
     chmod 755 /var/empty ; \
-    groupadd sshd ; \
-    useradd -g sshd -c 'sshd privsep' -d /var/empty -s /bin/false sshd 
+    groupadd sshd 
+# ;  \
+#    useradd -g sshd -c 'sshd privsep' -d /var/empty -s /bin/false sshd 
 ENV APP_NAME="Terminator"
+USER root
 ADD startapp.sh /startapp.sh
