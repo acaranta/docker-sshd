@@ -31,6 +31,8 @@ then
 else
   sed -i 's/PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config
 fi
+echo "sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin" >>/etc/passwd
+echo "sshd:x:74:" >>/etc/group
 
 # Public key
 if [ "$PUBKEY" != "" ]
