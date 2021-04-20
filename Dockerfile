@@ -12,7 +12,7 @@ RUN /bin/rm -v /etc/ssh/ssh_host_* && mkdir /var/run/sshd
 COPY sshd_config /etc/ssh/
 RUN mkdir /app
 COPY terminator.png /app
-RUN APP_ICON_URL=file:///app/terminator.png && install_app_icon.sh "$APP_ICON_URL"
+#RUN APP_ICON_URL=file:///app/terminator.png && install_app_icon.sh "$APP_ICON_URL"
 RUN mkdir /var/empty ; \
     chown root:sys /var/empty ; \
     chmod 755 /var/empty ; \
