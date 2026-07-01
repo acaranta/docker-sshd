@@ -7,4 +7,5 @@ data:
   imagetag: latest  
   branches: ['master', 'main']
   repotype: hub
-  buildarch: linux/arm64/v8,linux/amd64
+  # buildarch: linux/arm64/v8,linux/amd64
+  buildarch: linux/amd64
