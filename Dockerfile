@@ -13,12 +13,16 @@ COPY sshd_config /etc/ssh/
 RUN mkdir /app
 COPY terminator.png /app
 RUN APP_ICON_URL=file:///app/terminator.png && install_app_icon.sh "$APP_ICON_URL"
+# Privilege-separation chroot dir for sshd. The sshd user/group themselves are
+# created at runtime in startapp.sh because the base image regenerates
+# /etc/passwd and /etc/group on every startup.
 RUN mkdir /var/empty ; \
     chown root:sys /var/empty ; \
-    chmod 755 /var/empty ; \
-    groupadd sshd 
-# ;  \
-#    useradd -g sshd -c 'sshd privsep' -d /var/empty -s /bin/false sshd 
+    chmod 755 /var/empty
 ENV APP_NAME="Terminator"
+# startapp.sh needs root (useradd, sshd, sudo config). Newer base images run the
+# app unprivileged by default, so pin the app user to root.
+ENV USER_ID=0
+ENV GROUP_ID=0
 USER root
 ADD startapp.sh /startapp.sh

@@ -1,5 +1,8 @@
 #!/bin/sh
-[ ! -e /etc/ssh/ssh_host_rsa_key ] && dpkg-reconfigure openssh-server
+# Generate SSH host keys directly. `dpkg-reconfigure openssh-server` blocks on
+# an interactive ucf prompt (our sshd_config differs from the package default),
+# which would hang container startup.
+[ ! -e /etc/ssh/ssh_host_rsa_key ] && ssh-keygen -A
 
 [ "$USERNAME" = "" ] && USERNAME=user
 [ "$USERID" = "" ] && USERID=1000
@@ -17,7 +20,9 @@ echo "Checking data directory $USERDIR"
 [ ! -e "$USERDIR" ] && mkdir -p "$USERDIR" && chown "$USERID":"$GROUPID" "$USERDIR"
 
 echo "Configuring user $USERNAME (uid=$USERID,gid=$GROUPID,dir=$USERDIR)"
-usermod -u $USERID -o -g $GROUPID -d $USERDIR -s "$USERSHELL" $USERNAME
+# Note: no `-o/--non-unique` flag -- the base image's Rust usermod does not
+# support it, and the target UID is free anyway.
+usermod -u $USERID -g $GROUPID -d $USERDIR -s "$USERSHELL" $USERNAME
 
 # Password
 if [ "$PASSWORD" != "" ]
@@ -53,6 +58,12 @@ case "$SUDOER" in
   *)
     echo "No sudo power allowed"
 esac
+
+# The base image regenerates /etc/passwd and /etc/group at container startup, so
+# the sshd privilege-separation user/group must be created here rather than in
+# the Dockerfile (build-time entries get wiped). sshd refuses to start without it.
+getent group sshd >/dev/null || groupadd sshd
+getent passwd sshd >/dev/null || useradd -g sshd -c 'sshd privsep' -d /var/empty -s /bin/false sshd
 
 service ssh start
 syslogd -n -O /dev/stdout &
