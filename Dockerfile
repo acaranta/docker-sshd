@@ -1,8 +1,14 @@
-FROM jlesage/baseimage-gui:ubuntu-18.04
+FROM jlesage/baseimage-gui:ubuntu-26.04-v4
 
 
-RUN apt-get update && apt-get install -y terminator tmux git openssh-server busybox-syslogd sudo iputils-ping vim && apt-get clean
-RUN /bin/rm -v /etc/ssh/ssh_host_* && mkdir /var/run/sshd
+# The base image redirects /run -> /tmp/run and /var/log -> /config/log for a
+# read-only rootfs. Those targets don't exist at build time, so the image's
+# uutils (Rust) mkdir refuses to `mkdir -p` through the dangling symlinks
+# (unlike GNU mkdir), which breaks systemd's package postinst scripts. Create
+# the targets first so dependency configuration succeeds.
+RUN mkdir -p /config/log /tmp/run
+RUN apt update && apt install -y terminator tmux git openssh-server sudo iputils-ping vim && apt install -y busybox-syslogd && apt clean
+RUN /bin/rm -v /etc/ssh/ssh_host_* && mkdir -p /var/run/sshd
 COPY sshd_config /etc/ssh/
 RUN mkdir /app
 COPY terminator.png /app
